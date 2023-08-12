@@ -56,7 +56,7 @@ const modelOptions = Object.keys(modelDetails).map((key) => ({
   description: modelDetails[key].description,
 }));
 
-const prohibitedWords = ['"none"'];
+const prohibitedWords = ['nude', 'naked', 'pussy'];
 
 // Define your suggestions for autocomplete here
 const suggestions = [
@@ -79,7 +79,7 @@ const ProdiaKeyModal = ({ setProdiaKey, setShowProdiaKeyModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem('NEXT_PUBLIC_PRODIA_KEY', key);
+    localStorage.setItem('PRODIA_KEY', key);
     setProdiaKey(key);
     setShowProdiaKeyModal(false);
   };
@@ -170,13 +170,13 @@ export default function HomePage() {
   
   const [showProdiaKeyModal, setShowProdiaKeyModal] = useState(true); // Add this line
   useEffect(() => {
-    const storedKey = localStorage.getItem('NEXT_PUBLIC_PRODIA_KEY');
+    const storedKey = localStorage.getItem('PRODIA_KEY');
     console.log('Stored key:', storedKey); // Add this line
     if (storedKey) {
       setProdiaKey(storedKey);
       setShowProdiaKeyModal(false);
     } else {
-      const envKey = process.env.NEXT_PUBLIC_PRODIA_KEY;
+      const envKey = process.env.PRODIA_KEY;
       console.log('Env key:', envKey); // And this line
       if (envKey) {
         setProdiaKey(envKey);
@@ -200,7 +200,6 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [rawText, setRawText] = useState('');
   const [buttonText, setButtonText] = useState('Generate Images');
   const toggleModelSelection = (model) => {
     if (selectedModels.includes(model)) {
@@ -403,50 +402,6 @@ const handleImageClick = (index) => {
     }
   };
   
-  const handlePaste = async (event) => {
-    // Prevent the default paste action
-    event.preventDefault();
-  
-    // Use navigator.clipboard to read the clipboard text
-    try {
-      const pastedText = await navigator.clipboard.readText();
-      console.log('Pasted text:', pastedText);
-  
-      // Splitting at "Negative prompt:" to separate the main prompt and the rest
-      const negativePromptIndex = pastedText.indexOf('Negative prompt:');
-      const mainPrompt = pastedText.substring(0, negativePromptIndex).trim();
-      const rest = pastedText.substring(negativePromptIndex + 'Negative prompt:'.length).trim();
-  
-      const negativePromptParts = rest.split('\n');
-      const negativePrompt = negativePromptParts[0].trim();
-  
-      // Extracting other parameters by splitting them at "," and ":"
-      const parameters = {};
-      const lines = negativePromptParts[1].split(', ');
-      for (let i = 0; i < lines.length; i++) {
-        const [key, value] = lines[i].split(': ');
-        if (key && value) {
-          parameters[key.trim()] = value.trim();
-        }
-      }
-  
-      // Now you can use mainPrompt, negativePrompt, and parameters to set the state in your component
-      setPrompt(mainPrompt); // Set the main prompt
-      setNegativePrompt(negativePrompt);
-      setSteps(Number(parameters['Steps']));
-      setSampler(parameters['Sampler']);
-      setCfg_scale(Number(parameters['CFG scale']));
-      setSeed(Number(parameters['Seed']));
-      // You can continue extracting other parameters in a similar way
-    } catch (err) {
-      console.error('Failed to read clipboard text:', err);
-    }
-  };
-  
-  
-  
-
-  
   const CustomValueContainer = ({ children, ...props }) => (
     <div {...props} className="flex flex-wrap">
       {children}
@@ -486,44 +441,43 @@ const handleSelect = (value) => {
 
   
   return (
-<div className={`flex flex-col items-start min-h-screen w-full py-0 ${darkMode ? 'dark' : ''}`}>
-  {/* Dark mode toggle button */}
-  {showProdiaKeyModal && <ProdiaKeyModal setProdiaKey={setProdiaKey} setShowProdiaKeyModal={setShowProdiaKeyModal} />} 
-
-  <header className="w-full p-4 mb-4 bg-black text-white flex justify-around items-center">
-    {/* Icons */}
-    <a href="https://github.com/Tech-in-Schools-Inititaitive/pixio-community-lite-edition" target="_blank" rel="noopener noreferrer">
-      <FaGithub size={24} />
-    </a>
-    <a href="https://docs-three-jet.vercel.app/" target="_blank" rel="noopener noreferrer">
-      <FaQuestionCircle size={24} />
-    </a>
-    <a href="https://pixio.myapps.ai" target="_blank" rel="noopener noreferrer">
-      <FaLink size={24} />
-    </a>
-    <a href="https://myapps.ai" target="_blank" rel="noopener noreferrer">
-      <FaLifeRing size={24} />
-    </a>
-    <a href="https://x.com/tsi_org" target="_blank" rel="noopener noreferrer">
-      <FaTwitter size={24} />
-    </a>
-
-    <button onClick={() => setDarkMode(!darkMode)} className="bg-black-700 dark:bg-black-700 text-white-800 dark:text-gray-300 px-4 py-2 rounded-full hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300">
-      {darkMode ? '' : ''} {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
-    </button>
-
-      </header>
+    <div className={`flex flex-col items-start min-h-screen w-full py-0 ${darkMode ? 'dark' : ''}`}>
+      {/* Dark mode toggle button */}
+      {showProdiaKeyModal && <ProdiaKeyModal setProdiaKey={setProdiaKey} setShowProdiaKeyModal={setShowProdiaKeyModal} />} 
   
-      <div className="flex flex-col lg:flex-row w-full">
-        {/* Left Side (UI/UX Inputs) */}
-  <div className="w-full lg:w-450px lg:pr-2 flex flex-col items-center mb-8 lg:mb-0 bg-white shadow-md rounded-lg p-6">
-    <h1 className="text-4xl font-bold mb-8 text-center">👀Pixio</h1>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+      <header className="w-full p-4 mb-4 bg-black text-white flex justify-around items-center">
+        {/* Icons */}
+        <a href="https://github.com/Tech-in-Schools-Inititaitive/pixio-community-lite-edition" target="_blank" rel="noopener noreferrer">
+          <FaGithub size={24} />
+        </a>
+        <a href="https://docs-three-jet.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <FaQuestionCircle size={24} />
+        </a>
+        <a href="https://pixio.myapps.ai" target="_blank" rel="noopener noreferrer">
+          <FaLink size={24} />
+        </a>
+        <a href="https://myapps.ai" target="_blank" rel="noopener noreferrer">
+          <FaLifeRing size={24} />
+        </a>
+        <a href="https://x.com/tsi_org" target="_blank" rel="noopener noreferrer">
+          <FaTwitter size={24} />
+        </a>
+  
+        <button onClick={() => setDarkMode(!darkMode)} className="bg-black-700 dark:bg-black-700 text-white-800 dark:text-gray-300 px-4 py-2 rounded-full hover:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300">
+          {darkMode ? '' : ''} {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
+        </button>
+      </header>
+    
+      <div className="w-full lg:w-450px lg:pr-2 flex flex-col items-center mb-8 lg:mb-0 bg-white shadow-md rounded-lg p-6">
+        <div className="flex items-center mb-8">
+        <img src={process.env.LOGO_URL} alt="Alitin's Generator" className="w-12 h-12 mr-2" />
+          <h1 className="text-4xl font-bold">PixlMagic</h1>
+        </div>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
           
           <div className="flex flex-wrap justify-center w-full">
             <div className="bg-white shadow-md rounded-lg p-6 w-full md:max-w-md mb-8">
               {/* Prompt Input */}
-
               <div className="mb-4">
   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="prompt">
     Prompt
@@ -552,22 +506,6 @@ const handleSelect = (value) => {
   rows={3}
 />
 </div> 
-<div className="mb-4">
-  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="raw-text">
-    Civit AI Prompt Paste
-  </label>
-  <textarea
-    value={rawText}
-    onChange={(event) => setRawText(event.target.value)}
-    className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${darkMode ? 'text-white' : 'text-gray-700'}`}
-    style={darkMode ? { backgroundColor: '#262626' } : {}}
-    id="raw-text"
-    rows={3}
-  />
-  <button onClick={handlePaste} className="mt-2 bg-green-500 text-white px-4 py-2 rounded">
-    Extract and Fill
-  </button>
-</div>
 {/* Model Selection */}
 <div className="mb-4">
   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="models">
@@ -686,7 +624,6 @@ const handleSelect = (value) => {
       Aspect Ratio
     </label>
     <select
-    onPaste={handlePaste}
       value={aspect_ratio}
       onChange={(event) => setaspect_ratio(event.target.value)}
       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -702,7 +639,6 @@ const handleSelect = (value) => {
       Sampler
     </label>
     <select
-    onPaste={handlePaste}
       value={sampler}
       onChange={(event) => setSampler(event.target.value)}
       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -723,7 +659,6 @@ const handleSelect = (value) => {
       Steps
     </label>
     <input
-     onPaste={handlePaste}
       type="number"
       value={steps}
       onChange={(event) => setSteps(Number(event.target.value))}
@@ -738,7 +673,6 @@ const handleSelect = (value) => {
       CFG Scale
     </label>
     <input
-     onPaste={handlePaste}
       type="number"
       value={cfg_scale}
       onChange={(event) => setCfg_scale(Number(event.target.value))}
@@ -751,7 +685,6 @@ const handleSelect = (value) => {
       Seed
     </label>
     <input
-     onPaste={handlePaste}
       type="number"
       value={seed}
       onChange={(event) => setSeed(Number(event.target.value))}
@@ -765,7 +698,6 @@ const handleSelect = (value) => {
       Upscale
     </label>
     <input
-     onPaste={handlePaste}
       type="checkbox"
       checked={upscale}
       onChange={(event) => setUpscale(event.target.checked)}
@@ -776,6 +708,7 @@ const handleSelect = (value) => {
 </div>
 </div>
 
+  
               {/* Generation and Gallery Buttons */}
               <button
                 onClick={handleGenerateImage}
@@ -869,6 +802,6 @@ const handleSelect = (value) => {
           )}
         </div>
       </div>
-    </div>
+
   );
 }
